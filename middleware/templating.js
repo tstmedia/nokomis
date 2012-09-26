@@ -2,7 +2,7 @@
 module.exports = templating
 
 var path = require('path')
-var templates = require('../templates/templates')
+//var templates = require('../templates/templates')
 var _ = require('underscore')
 var async = require('async')
 
@@ -20,7 +20,7 @@ var templatesRoot = ''
 
 function templating(req, res, config) {
 
-  var templatesRoot = path.resolve(config.appRoot, 'templates')
+  if (!templatesRoot) templatesRoot = path.resolve(config.appRoot, 'templates')
 
   res.render = function(tmplPath, data, options) {
     if (!tmplPath) throw 'No template specified'

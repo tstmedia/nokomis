@@ -20,7 +20,7 @@ function response(req, res, config) {
     res.statusCode = code || 302
     res.setHeader('location', target)
     var avail = ['text/html', 'application/json']
-    var mt = req.neg.preferredMediaType(avail)
+    var mt = req.contentNegotiator.preferredMediaType(avail)
     if (mt === 'application/json') {
       res.json({ redirect: target, statusCode: code })
     } else {

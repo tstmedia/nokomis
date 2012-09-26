@@ -2,7 +2,8 @@
 module.exports = session
 
 function session(req, res, config) {
-  req.session = res.session = new Session(config.session)
+  var sessConf = config.session || { key:'s' }
+  req.session = res.session = new Session(req, sessConf)
 }
 
 

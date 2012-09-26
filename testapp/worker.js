@@ -15,7 +15,13 @@ var TestApp = App.extend({
   },
 
   setupRoutes: routes,
-  setupMiddleware: middleware
+  setupMiddleware: middleware,
+
+  setupTemplating: function(templating) {
+    templating.extension = 'hb'
+    templating.setPath(__dirname + '/templates')
+    templating.preload('**/*.hb')
+  }
 
 })
 

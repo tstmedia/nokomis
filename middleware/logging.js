@@ -10,7 +10,7 @@ function logging(req, res, config) {
 
   // create the logger
   if (!logger) {
-    logger = bunyan.createLogger(config.log)
+    logger = bunyan.createLogger(config.log || { name:'Nokomis App' })
   }
 
   // setup loggers on the req and res objects

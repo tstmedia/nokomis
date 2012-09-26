@@ -106,7 +106,7 @@ function handleError(req, res, data, template) {
 
   template = template || 'errors/default'
   var availableMediaTypes = ['text/html', 'application/json']
-  var preferred = req.neg.preferredMediaType(availableMediaTypes)
+  var preferred = req.contentNegotiator.preferredMediaType(availableMediaTypes)
   if (preferred == 'text/html')
     return res.render(template, data)
 

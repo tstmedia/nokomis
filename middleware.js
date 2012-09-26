@@ -11,10 +11,7 @@ var defaults = [
   'cookies',
   'session',
   'contentNegotiation',
-  'response',
-  'templating',
-  'templatePartials',
-  'templateHelpers'
+  'response'
 ]
 
 module.exports = {
@@ -36,7 +33,7 @@ module.exports = {
       if (typeof modules[name] == 'function')
         modules[name](req, res, config)
       else
-        require('./middleware/' + name)
+        require('./middleware/' + name)(req, res, config)
     })
 
     // execute the rest

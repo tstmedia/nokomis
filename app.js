@@ -9,14 +9,17 @@ var extendable = require('extendable')
 var master = require('./master')
 var router = require('./router')
 var middleware = require('./middleware')
+var Templating = require('./templating')
 
 function App(config) {
   this.config = _.extend({}, this.config, config)
   this.router = router
   this.middleware = middleware
+  this.templating = new Templating()
 
   this.setupRoutes(this.router)
   this.setupMiddleware(this.middleware)
+  this.setupTemplating(this.templating)
 
   this.setupHttpServer()
 
@@ -28,6 +31,7 @@ _.extend(App.prototype, {
   initialize: function() {},
   setupRoutes: function() {},
   setupMiddleware: function() {},
+  setupTemplating: function() {},
 
   // initializes the http server for this app instance
   setupHttpServer: function() {
@@ -73,6 +77,7 @@ _.extend(App.prototype, {
         req: req,
         res: res,
         route: route,
+        templating: this.templating,
         config: this.config
       })
     }.bind(this)

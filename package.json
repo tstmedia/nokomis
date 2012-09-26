@@ -1,5 +1,5 @@
 {
-  "name" : "node_web",
+  "name" : "nokomis",
   "version" : "0.0.1",
   "description" : "Web framework for node",
   "main" : "./index.js",
@@ -11,7 +11,6 @@
     "error-page" : "*",
     "extendable" : "git://github.com/mikefrey/extendable.git",
     "filed": "0",
-    "handlebars" : "*",
     "glob": "3",
     "keygrip": "~0.2.0",
     "negotiator": "~0.2.3",
@@ -30,7 +29,7 @@
   },
   "repository" : {
     "type" : "git",
-    "url" : "git://github.com/tstmedia/node_web.git"
+    "url" : "git://github.com/tstmedia/nokomis.git"
   },
   "scripts" : {
     "test" : "NODE_ENV=test mocha --recursive -R spec"

@@ -21,7 +21,7 @@ function getBareRequest() {
     remotePort: 12345
   }
   req.headers = {}
-  req.neg = {
+  req.contentNegotiator = {
     preferredMediaType: sinon.stub().returns('text/html')
   }
 
@@ -56,7 +56,7 @@ function getBareResponse() {
   res.setHeader = sinon.spy()
   res.end = sinon.spy()
   res.headers = {}
-  res.neg = {
+  res.contentNegotiator = {
     preferredMediaType: sinon.stub().returns('text/html')
   }
   return res

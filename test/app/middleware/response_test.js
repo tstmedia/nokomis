@@ -145,7 +145,7 @@ describe('Middleware > response', function() {
     it('should call json helper', function(done) {
       res.html = sinon.spy() // reset the spy
       res.json = sinon.spy() // reset the spy
-      req.neg.preferredMediaType.returns('application/json')
+      req.contentNegotiator.preferredMediaType.returns('application/json')
       res.redirect(target)
       assert(res.json.calledOnce)
       assert(!res.html.called)

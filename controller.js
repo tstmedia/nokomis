@@ -13,6 +13,7 @@ function Controller(options) {
   this.req = options.req
   this.config = options.config
   this.route = options.route
+  this.templating = options.templating
 
   this.model = {}
 
@@ -41,7 +42,7 @@ _.extend(Controller.prototype, {
   // Determines the best response type based on what the
   // client can accept and what the controller can output.
   _render: function(mediaType) {
-    var preferredType = mediaType || this.req.neg.preferredMediaType(this.availableMediaTypes)
+    var preferredType = mediaType || this.req.contentNegotiator.preferredMediaType(this.availableMediaTypes)
 
     if (/html$/.test(preferredType)) {
       return this.html()
@@ -73,13 +74,20 @@ _.extend(Controller.prototype, {
   // Override this method to provide alternate
   // behavior.
   html: function() {
-    if (this.res.render)
-      return this.res.render(this.template, this.model, {
-        layout: this.layout,
-        layoutDir: this.layoutDir,
-        layoutRecursion: this.layoutRecursion
-      })
-    throw 'Template render method not implemented'
+    var self = this
+    this.templating.render(this.template, this.model, {
+      layout: this.layout
+    }, function(err, result) {
+      if (err) return self.res.error(err)
+      self.res.html(result)
+    })
+    // if (this.res.render)
+    //   return this.res.render(this.template, this.model, {
+    //     layout: this.layout,
+    //     layoutDir: this.layoutDir,
+    //     layoutRecursion: this.layoutRecursion
+    //   })
+    // throw 'Template render method not implemented'
   },
 
   // Output the model in JSON format.
