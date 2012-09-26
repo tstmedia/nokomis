@@ -7,6 +7,7 @@ module.exports = Controller
 
 var _ = require('underscore')
 var extendable = require('extendable')
+var Plugin = require('./plugins')
 
 function Controller(options) {
   this.res = options.res
@@ -152,3 +153,4 @@ _.extend(Controller.prototype, {
 })
 
 Controller.extend = extendable
+Plugin.makePluggable(Controller)
