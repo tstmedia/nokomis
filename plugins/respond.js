@@ -1,11 +1,9 @@
 
 var Plugin = require('../plugins')
 
-var Respond = Plugin.extend({
+var Respond = module.exports = Plugin.extend({
 
-  initialize: function() {
-
-  },
+  initialize: function() {},
 
   /**
    * Provides a redirect helper on the res object
@@ -75,4 +73,3 @@ var Respond = Plugin.extend({
   }
 
 })
-
