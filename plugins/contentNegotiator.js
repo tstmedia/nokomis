@@ -4,7 +4,7 @@ var Negotiator = require('negotiator')
 
 var ContentNegotiator = module.exports = Plugin.extend({
 
-  initialize: function() {
+  run: function() {
     this._neg = new Negotiator(this.req)
   },
 

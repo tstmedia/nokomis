@@ -16,6 +16,10 @@ function Controller(options) {
   this.route = options.route
   this.templating = options.templating
 
+  this.runPlugins()
+
+  this.req.on('timeout', this.timeout.bind(this))
+
   this.model = {}
 
   this._done = this._done.bind(this)
@@ -102,6 +106,10 @@ _.extend(Controller.prototype, {
     if (this.res.error)
       return this.res.error.apply(this.res, arguments)
     throw 'error response method not implemented'
+  },
+
+  timeout: function() {
+
   },
 
 

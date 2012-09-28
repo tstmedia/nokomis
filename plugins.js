@@ -3,14 +3,23 @@ var extendable = require('extendable')
 var _ = require('underscore')
 
 var Plugin = function(Class) {
+  var methods = _.clone(this.prototype)
+  _.each(['initialize', 'run'], function(m) { delete methods[m] })
   _.defaults(Class.prototype, this.prototype)
+  this.initialize.apply(this, arguments)
 }
 
 // Instance members
 
 _.extend(Plugin.prototype, {
 
-  initialize: function() {}
+  // Called once for each instace of the plugin.
+  // Almost always before the extended Class is initialized
+  initialize: function() {},
+
+  // Called once for each instance of the extended Class
+  // in the context of that instance
+  run: function() {}
 
 })
 
@@ -26,9 +35,10 @@ _.extend(Plugin, {
     // The instance methods added to
     // a Class that is made 'pluggable'
     _.extend(Class.prototype, {
-      initializePlugins: function() {
+      runPlugins: function() {
+        var args = [this].concat(_.toArray(arguments))
         for (var i = 0; i < plugins.length; i++) {
-          plugins[i].initialize.apply(this, arguments)
+          plugins[i].run.apply(plugins[i], args)
         }
       }
     })
