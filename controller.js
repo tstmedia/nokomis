@@ -7,7 +7,7 @@ module.exports = Controller
 
 var _ = require('underscore')
 var extendable = require('extendable')
-var Plugin = require('./plugins')
+var Plugin = require('./plugin')
 
 function Controller(options) {
   this.res = options.res

@@ -1,5 +1,5 @@
 
-var Plugin = require('../plugins')
+var Plugin = require('../plugin')
 var Negotiator = require('negotiator')
 
 var ContentNegotiator = module.exports = Plugin.extend({

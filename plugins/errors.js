@@ -1,5 +1,5 @@
 
-var Plugin = require('../plugins')
+var Plugin = require('../plugin')
 var Domain = require('domain')
 var ErrorPage = require('error-page')
 

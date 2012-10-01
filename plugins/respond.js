@@ -1,5 +1,5 @@
 
-var Plugin = require('../plugins')
+var Plugin = require('../plugin')
 
 var Respond = module.exports = Plugin.extend({
 

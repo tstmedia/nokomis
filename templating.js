@@ -1,16 +1,10 @@
 
-
-
 var fs = require('fs')
 var path = require('path')
 var glob = require('glob')
 var async = require('async')
 var _ = require('underscore')
 var extendable = require('extendable')
-
-var cache = {}
-var templatePath = './templates/'
-
 
 // Provide a basic compliant templating engine
 var engine = {
@@ -22,18 +16,16 @@ var engine = {
 }
 
 
-function Templating() {
 
+function Templating() {
+  this.cache = _.extend({}, this.cache)
 }
 
 _.extend(Templating.prototype, {
 
   engine: engine,
-
-  setPath: function(p) {
-    templatePath = p
-    console.log('TEMPLATE PATH', templatePath)
-  },
+  templatePath: '../../app/templates',
+  cache: {},
 
   render: function(tmpl, data, options, callback) {
     var self = this
@@ -79,7 +71,7 @@ _.extend(Templating.prototype, {
       options = null
     }
 
-    var filePath = path.resolve(templatePath, tmpl)
+    var filePath = path.resolve(this.templatePath, tmpl)
     fs.readFile(filePath, 'utf8', function(err, data) {
       if (err) {
         console.error('Error loading template [Templating::loadTemplate]')
@@ -95,7 +87,7 @@ _.extend(Templating.prototype, {
   preload: function(match, callback) {
     var self = this
     match = match || '**/*'
-    glob(match, {cwd:templatePath}, function(err, files) {
+    glob(match, {cwd:this.templatePath}, function(err, files) {
       async.forEach(files, function(file, callback) {
         self.loadTemplate(file, callback)
       }, function(err) {

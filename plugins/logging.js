@@ -1,5 +1,5 @@
 
-var Plugin = require('../plugins')
+var Plugin = require('../plugin')
 var crypto = require('crypto')
 var bunyan = require('bunyan')
 

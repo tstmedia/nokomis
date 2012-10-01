@@ -1,5 +1,5 @@
 
-var Plugin = require('../plugins')
+var Plugin = require('../plugin')
 var Cookies = require('cookies')
 
 module.exports = Plugin.extend({

@@ -8,3 +8,5 @@ conf.server = {
   host: 'localhost',
   cluster: { size: 1 /*require('os').cpus().length*/ }
 }
+
+conf.templatePath = __dirname + '/templates'

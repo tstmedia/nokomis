@@ -1,4 +1,4 @@
-var Plugin = require('../plugins')
+var Plugin = require('../plugin')
 var requestTimeout = require('request-timeout')
 
 module.exports = Plugin.extend({
