@@ -10,8 +10,6 @@ module.exports = Plugin.extend({
   initialize: function(config) {
     var tmpl = this.tmpl = new Templating()
     tmpl.templatePath = config.templatePath || tmpl.templatePath
-    tmpl.extension = 'hb'
-    tmpl.preload()
   },
 
   run: function(instance) {
