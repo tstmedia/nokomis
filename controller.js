@@ -14,7 +14,7 @@ function Controller(options) {
   this.req = options.req
   this.config = options.config
   this.route = options.route
-  this.templating = options.templating
+  // this.templating = options.templating
 
   this.runPlugins()
 
@@ -47,12 +47,15 @@ _.extend(Controller.prototype, {
   // Determines the best response type based on what the
   // client can accept and what the controller can output.
   _render: function(mediaType) {
-    var preferredType = mediaType || this.req.contentNegotiator.preferredMediaType(this.availableMediaTypes)
+    var self = this
+    var preferredType = mediaType || this.preferredMediaType(this.availableMediaTypes)
 
     if (/html$/.test(preferredType)) {
-      var html = this.render()
-      if (this.html) return this.html(html)
-      throw 'No `html` method implemented'
+      return this.render(function(err, html){
+        if (err) self.error(err)
+        if (self.html) return self.html(html)
+        throw 'No `html` method implemented'
+      })
     }
 
     if (/json$/.test(preferredType)) {
@@ -82,22 +85,22 @@ _.extend(Controller.prototype, {
   // the specified template and layout settings.
   // Override this method to provide alternate
   // behavior.
-  html: function() {
-    var self = this
-    this.templating.render(this.template, this.model, {
-      layout: this.layout
-    }, function(err, result) {
-      if (err) return self.res.error(err)
-      self.res.html(result)
-    })
-    // if (this.res.render)
-    //   return this.res.render(this.template, this.model, {
-    //     layout: this.layout,
-    //     layoutDir: this.layoutDir,
-    //     layoutRecursion: this.layoutRecursion
-    //   })
-    // throw 'Template render method not implemented'
-  },
+  // html: function() {
+  //   var self = this
+  //   this.tmpl.render(this.template, this.model, {
+  //     layout: this.layout
+  //   }, function(err, result) {
+  //     if (err) return self.res.error(err)
+  //     self.res.html(result)
+  //   })
+  //   // if (this.res.render)
+  //   //   return this.res.render(this.template, this.model, {
+  //   //     layout: this.layout,
+  //   //     layoutDir: this.layoutDir,
+  //   //     layoutRecursion: this.layoutRecursion
+  //   //   })
+  //   // throw 'Template render method not implemented'
+  // },
 
   // Output an error response to the client.
   // Override this method to provide alternate

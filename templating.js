@@ -50,37 +50,37 @@ _.extend(Templating.prototype, {
   renderTemplate: function(template, data, callback) {
       var result, error
       try {
-        result = template(data, options)
+        result = template(data)
       } catch(e) {
+        console.error(e)
         error = e
       }
       callback(error, result)
   },
 
-  loadTemplate: function(tmpl, options, callback) {
+  loadTemplate: function(tmplName, options, callback) {
     var self = this
+    // normalize tmplName with the specified extension
+    if (this.extension && !~tmplName.indexOf('.'+this.extension))
+      tmplName += '.' + this.extension
 
-    // normalize tmpl with the specified extension
-    if (this.extension && !~tmpl.indexOf('.'+this.extension))
-      tmpl + '.' + this.extension
-
-    if (cache[tmpl]) return callback(null, cache[tmpl])
+    if (this.cache[tmplName]) return callback(null, this.cache[tmplName])
 
     if (typeof options == 'function') {
       callback = options
-      options = null
+      options = {}
     }
 
-    var filePath = path.resolve(this.templatePath, tmpl)
+    var filePath = path.resolve(this.templatePath, tmplName)
     fs.readFile(filePath, 'utf8', function(err, data) {
       if (err) {
-        console.error('Error loading template [Templating::loadTemplate]')
+        console.error('Error loading template [Templating::loadTemplate]', filePath)
         console.error(err)
         callback(err)
       }
 
-      cache[tmpl] = self.engine.compile(data, options)
-      callback(null, cache[tmpl])
+      var template = self.cache[tmplName] = self.engine.compile(data, options)
+      callback(null, template)
     })
   },
 
