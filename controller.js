@@ -14,10 +14,11 @@ function Controller(options) {
   this.req = options.req
   this.config = options.config
   this.route = options.route
-  // this.templating = options.templating
 
+  // run plugin setup for this controller instance
   this.runPlugins()
 
+  // setup request timeout handler
   this.req.on('timeout', this.timeout.bind(this))
 
   this.model = {}
@@ -79,42 +80,11 @@ _.extend(Controller.prototype, {
   // it with your own initialization logic.
   initialize: function(){},
 
-  // ## Response Format Methods
-
-  // Render the object attached to this.model using
-  // the specified template and layout settings.
-  // Override this method to provide alternate
-  // behavior.
-  // html: function() {
-  //   var self = this
-  //   this.tmpl.render(this.template, this.model, {
-  //     layout: this.layout
-  //   }, function(err, result) {
-  //     if (err) return self.res.error(err)
-  //     self.res.html(result)
-  //   })
-  //   // if (this.res.render)
-  //   //   return this.res.render(this.template, this.model, {
-  //   //     layout: this.layout,
-  //   //     layoutDir: this.layoutDir,
-  //   //     layoutRecursion: this.layoutRecursion
-  //   //   })
-  //   // throw 'Template render method not implemented'
-  // },
-
-  // Output an error response to the client.
-  // Override this method to provide alternate
-  // behavior.
-  error: function() {
-    if (this.res.error)
-      return this.res.error.apply(this.res, arguments)
-    throw 'error response method not implemented'
-  },
-
+  // Handles a timed out request. Override with your
+  // own logic and error handling.
   timeout: function() {
-
+    this.error(504, 'Server timeout')
   },
-
 
   // content types that can be output from this controller
   availableMediaTypes: [
@@ -122,12 +92,14 @@ _.extend(Controller.prototype, {
     'application/json'
   ],
 
+  // template settings
   template: null,
+  templateOptions: {
+    layout: 'layout'
+  },
 
-  // layout rendering and recursion
-  layout: 'layout',
-  layoutRecursion: true,
-
+  // Call this in your initialize function to enforce
+  // a maximum request size. Useful for file uploads.
   enforceMaxLength: function(maxLen) {
     // respond with errors if max length is exceeded
     if (typeof maxLen === 'number') {
