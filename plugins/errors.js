@@ -102,17 +102,13 @@ function handle500(req, res, data) {
  */
 
 function handleError(req, res, data, template) {
-  console.log(data)
+  console.error('Responding with error', data)
 
-  template = template || 'errors/default'
-  var availableMediaTypes = ['text/html', 'application/json']
-  var preferred = this.preferredMediaType(availableMediaTypes)
-  if (preferred == 'text/html')
-    return this.render(template, data)
+  delete data.options
+  delete data.stack
+  delete data.error
 
-  var err = { error: _.extend({}, data) }
-  delete err.error.options
-  delete err.error.stack
-  delete err.error.error
-  this.json(err)
+  this.template = template || 'errors/default'
+  this.model = data
+  return this._render(template, data)
 }
