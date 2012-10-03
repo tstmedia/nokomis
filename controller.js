@@ -5,6 +5,7 @@
 
 module.exports = Controller
 
+var EventEmitter = require('events').EventEmitter
 var _ = require('underscore')
 var extendable = require('extendable')
 var Plugin = require('./plugin')
@@ -14,6 +15,9 @@ function Controller(options) {
   this.req = options.req
   this.config = options.config
   this.route = options.route
+
+  // setup as an event emitter
+  EventEmitter.call(this)
 
   // run plugin setup for this controller instance
   this.runPlugins()
@@ -37,7 +41,7 @@ function Controller(options) {
   }
 }
 
-_.extend(Controller.prototype, {
+_.extend(Controller.prototype, EventEmitter.prototype, {
 
   // Called when the action method is done populating the
   // this.model object with data.
