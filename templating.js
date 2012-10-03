@@ -73,7 +73,6 @@ _.extend(Templating.prototype, {
     if (this.extension && !~filePath.indexOf('.'+this.extension))
       filePath += '.' + this.extension
 
-    console.log('LOADING FILE', filePath)
     fs.readFile(filePath, 'utf8', function(err, data) {
       if (err) {
         console.error('Error loading template [Templating::loadTemplate]', filePath)
@@ -90,11 +89,11 @@ _.extend(Templating.prototype, {
     var self = this
     var ext = this.extension ? '.' + this.extension : ''
     match = match || ('**/*' + ext)
+    console.log('GLOB', this.templatePath, match)
     glob(match, {cwd:this.templatePath}, function(err, files) {
-      async.forEach(files, function(file, callback) {
+      async.forEach(files, function(file, cb) {
         file = file.substring(0, file.lastIndexOf(ext))
-        console.log('PRELOADING', file)
-        self.loadTemplate(file, callback)
+        self.loadTemplate(file, cb)
       }, function(err) {
         if (err) console.error('Error preloading templates')
         if (typeof callback == 'function') callback(err)

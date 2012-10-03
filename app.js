@@ -61,7 +61,8 @@ _.extend(App.prototype, {
       // without a matching route, send a 404
       if (!route) {
         console.log('No route matched for ' + normalPathname)
-        return res.error(404)
+        return res.end(404)
+        //return res.error(404)
       }
 
       // run matched controller
@@ -86,7 +87,10 @@ _.extend(App.prototype, {
     // a domain to capture any unhandled exceptions
     var domain = Domain.create()
     domain.on('error', function(err) {
-      try { res.error(500, err) }
+      try {
+        //res.error(500, err)
+        res.end(500)
+      }
       finally {
         domain.dispose()
       }
