@@ -21,7 +21,15 @@ var ContentNegotiator = module.exports = Plugin.extend({
   },
 
   preferredLanguages: function() {
-    return this._neg.preferredMediaTypes.apply(this._neg, arguments)
+    return this._neg.preferredLanguages.apply(this._neg, arguments)
+  },
+
+  preferredEncoding: function() {
+    return this._neg.preferredEncoding.apply(this._neg, arguments)
+  },
+
+  preferredEncodings: function() {
+    return this._neg.preferredEncodings.apply(this._neg, arguments)
   }
 
 })
