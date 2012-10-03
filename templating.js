@@ -89,15 +89,13 @@ _.extend(Templating.prototype, {
     var self = this
     var ext = this.extension ? '.' + this.extension : ''
     match = match || ('**/*' + ext)
-    console.log('GLOB', this.templatePath, match)
-    glob(match, {cwd:this.templatePath}, function(err, files) {
-      async.forEach(files, function(file, cb) {
-        file = file.substring(0, file.lastIndexOf(ext))
-        self.loadTemplate(file, cb)
-      }, function(err) {
-        if (err) console.error('Error preloading templates')
-        if (typeof callback == 'function') callback(err)
-      })
+    var files = glob.sync(match, {cwd:this.templatePath})
+    async.forEach(files, function(file, cb) {
+      file = file.substring(0, file.lastIndexOf(ext))
+      self.loadTemplate(file, cb)
+    }, function(err) {
+      if (err) console.error('Error preloading templates')
+      if (typeof callback == 'function') callback(err)
     })
   }
 
