@@ -60,9 +60,6 @@ _.extend(Templating.prototype, {
 
   loadTemplate: function(tmplName, options, callback) {
     var self = this
-    // normalize tmplName with the specified extension
-    if (this.extension && !~tmplName.indexOf('.'+this.extension))
-      tmplName += '.' + this.extension
 
     if (this.cache[tmplName]) return callback(null, this.cache[tmplName])
 
@@ -72,6 +69,11 @@ _.extend(Templating.prototype, {
     }
 
     var filePath = path.resolve(this.templatePath, tmplName)
+    // normalize tmplName with the specified extension
+    if (this.extension && !~filePath.indexOf('.'+this.extension))
+      filePath += '.' + this.extension
+
+    console.log('LOADING FILE', filePath)
     fs.readFile(filePath, 'utf8', function(err, data) {
       if (err) {
         console.error('Error loading template [Templating::loadTemplate]', filePath)
@@ -86,9 +88,12 @@ _.extend(Templating.prototype, {
 
   preload: function(match, callback) {
     var self = this
-    match = match || '**/*'
+    var ext = this.extension ? '.' + this.extension : ''
+    match = match || ('**/*' + ext)
     glob(match, {cwd:this.templatePath}, function(err, files) {
       async.forEach(files, function(file, callback) {
+        file = file.substring(0, file.lastIndexOf(ext))
+        console.log('PRELOADING', file)
         self.loadTemplate(file, callback)
       }, function(err) {
         if (err) console.error('Error preloading templates')

@@ -29,5 +29,9 @@ args.forEach(function(arg) {
   }
 })
 
+if (!App) {
+  console.error('NO WORKER FOUND', args)
+}
+
 // initialize the App
 var app = new App(config)

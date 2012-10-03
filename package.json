@@ -1,15 +1,15 @@
 {
   "name" : "nokomis",
   "version" : "0.0.1",
-  "description" : "Web framework for node",
+  "description" : "A less opinionated web framework for node",
   "main" : "./index.js",
   "dependencies" : {
     "async" : "*",
     "bunyan": "*",
-    "cluster-master" : "git://github.com/mikefrey/cluster-master.git",
+    "cluster-master" : ">=0.0.10",
     "cookies": "~0.2.2",
     "error-page" : "*",
-    "extendable" : "git://github.com/mikefrey/extendable.git",
+    "extendable" : ">=0.0.3",
     "filed": "0",
     "glob": "3",
     "keygrip": "~0.2.0",
