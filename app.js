@@ -8,14 +8,10 @@ var extendable = require('extendable')
 
 var master = require('./master')
 var router = require('./router')
-var middleware = require('./middleware')
-var Templating = require('./templating')
 
 function App(config) {
   this.config = _.extend({}, this.config, config)
   this.router = router
-  this.middleware = middleware
-  this.templating = new Templating()
 
   this.setupRoutes(this.router)
   this.setupHttpServer()
