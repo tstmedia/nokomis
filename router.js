@@ -88,6 +88,16 @@ exports.setControllerPath = function(path) {
   controllerPath = path
 }
 
+/**
+ * Tests to see if the given method is
+ * expected by the route
+ *
+ * @param {string} method
+ * @param {string|array} expected
+ * @returns {boolean}
+ * @api public
+ */
+
 function testHTTPMethod(method, expected) {
   if (!expected || _.isEmpty(expected)) return true
   if (!Array.isArray(expected)) expected = [expected]
