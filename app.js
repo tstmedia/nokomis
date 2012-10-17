@@ -53,7 +53,7 @@ _.extend(App.prototype, {
     var run = function() {
       // without a matching route, send a 404
       if (!route) {
-        console.log('No route matched for ' + normalPathname)
+        console.log('No route matched for ' + req.url)
         return res.end(404)
         //return res.error(404)
       }
