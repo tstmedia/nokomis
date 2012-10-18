@@ -29,7 +29,21 @@ exports.register = function(rte, ctlr) {
     rts[rte] = ctlr
   }
 
-  _.extend(routes, rts)
+  // if the route exists, then merge it
+  // if ( routes[rte] ) {
+    // check if actions is an array,
+      // if it's not, make it an array
+
+    // if the new action is a string
+      // push the new action into it
+    // if the new action is an array
+      // push each value individuallly
+
+    // same pattern for methods
+  // } else {
+    _.extend(routes, rts)
+  // }
+
 
   Object.keys(rts).forEach(function(route) {
     // define each route and provide a custom handler for it
@@ -45,7 +59,10 @@ exports.register = function(rte, ctlr) {
       var controller = require(controllerPath + handler.controller)
       this.route = route
       this.controller = controller
+
+      // change this to an in array check
       if (handler.action) this.action = handler.action
+
       // remove `fn` which is this function
       delete this.fn
       return this
