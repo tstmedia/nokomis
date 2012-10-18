@@ -99,6 +99,23 @@ describe('Router', function() {
       done()
     })
 
+    it('should match different methods to different actions on the same controller', function(){
+      var handler1 = {controller:'controller', action:'index',  method:'GET'}
+      var handler2 = {controller:'controller', action:'create', method:'POST'}
+      router.register('/your/:id', handler1)
+      router.register('/your/:id', handler2)
+
+      var match = router.match({url:'/your/value', method:'GET'})
+      assert(match)
+      assert.equal(typeof match, 'object')
+      assert.equal(match.controller, controller)
+
+      match = router.match({url:'/your/value', method:'POST'})
+      assert.equal(typeof match, 'object')
+      assert.equal(match.controller, controller)
+      done()
+    })
+
     it('should not match different HTTP methods', function(done) {
       var handler = {controller:'controller', method:['GET','POST']}
       router.register('/your/:id', handler)
