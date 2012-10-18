@@ -99,23 +99,6 @@ describe('Router', function() {
       done()
     })
 
-    it('should match different methods to different actions on the same controller', function(){
-      var handler1 = {controller:'controller', action:'index',  method:'GET'}
-      var handler2 = {controller:'controller', action:'create', method:'POST'}
-      router.register('/your/:id', handler1)
-      router.register('/your/:id', handler2)
-
-      var match = router.match({url:'/your/value', method:'GET'})
-      assert(match)
-      assert.equal(typeof match, 'object')
-      assert.equal(match.controller, controller)
-
-      match = router.match({url:'/your/value', method:'POST'})
-      assert.equal(typeof match, 'object')
-      assert.equal(match.controller, controller)
-      done()
-    })
-
     it('should not match different HTTP methods', function(done) {
       var handler = {controller:'controller', method:['GET','POST']}
       router.register('/your/:id', handler)
@@ -124,6 +107,37 @@ describe('Router', function() {
       assert(!match)
       done()
     })
+
+    it('should match different methods to different actions on the same controller', function(){
+      // register all the routes first, as you would in an app
+      var handler1 = {controller:'controller', action:'index',  method:'GET'}
+      var handler2 = {controller:'controller', action:'create', method:'POST'}
+      router.register('/your/:id', handler1)
+      // router.routes Object
+      //   /your/:id: Object
+      //     action: "index"
+      //     controller: "controller"
+      //     method: "GET"
+      router.register('/your/:id', handler2)
+      // router.routes Object
+      //   /your/:id: Object
+      //     action: "create"
+      //     controller: "controller"
+      //     method: "POST"
+
+
+      var match = router.match({url:'/your/value', method:'GET'})
+      assert(match)
+      assert.equal(typeof match, 'object')
+      assert.equal(match.controller, controller)
+
+      match = router.match({url:'/your/value', method:'POST'})
+      assert(match)
+      assert.equal(typeof match, 'object')
+      assert.equal(match.controller, controller)
+      done()
+    })
+
 
   })
 
