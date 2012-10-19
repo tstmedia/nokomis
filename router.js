@@ -44,15 +44,10 @@ exports.register = function(rte, ctlr) {
       // test for HTTP method
       if (!testHTTPMethod(method, handler)) return null
 
-      var controller = require(controllerPath + handler.controller)
-      this.route = route
+      var controller  = require(controllerPath + handler.controller)
       this.controller = controller
-
-      if (handler[method]) {
-        this.action = handler[method]
-      } else if (handler.action) {
-        this.action = handler.action
-      }
+      this.route      = route
+      this.action     = handler[method] || handler.action || undefined
 
       // remove `fn` which is this function
       delete this.fn
