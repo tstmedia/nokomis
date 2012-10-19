@@ -107,13 +107,13 @@ exports.setControllerPath = function(path) {
  */
 
 function testHTTPMethod(method, handler) {
-  // if handler has verbs but not this one, then return false
+  // check for a generic route setup
   if (!handler.method && !handler[method]) {
-    var verbs = _.keys(handler)
-    if (_.intersection(VERBS, verbs).length) return false
+    // if handler has verbs but not this one, then return false...
+    if (_.intersection(_.keys(handler), VERBS).length) return false
   }
 
-  // otherwise, we're doing a wider search for a match
+  // ...otherwise, we're doing a wider search for a match
   var expected = handler.method
   if (!expected || _.isEmpty(expected)) return true
   if (!Array.isArray(expected)) expected = [expected]
