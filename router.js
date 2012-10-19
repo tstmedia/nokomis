@@ -107,15 +107,16 @@ exports.setControllerPath = function(path) {
  */
 
 function testHTTPMethod(method, handler) {
-  // check for a generic route setup
-  if (!handler.method && !handler[method]) {
-    // if handler has verbs but not this one, then return false...
+  var expected = handler.method
+
+  // check to see if methods hasn't been set as a string, an array, or as a key on the handler
+  if (!expected && !handler[method]) {
+    // if so, we need to reject verbs that haven't been explicitly set...
     if (_.intersection(_.keys(handler), VERBS).length) return false
   }
 
-  // ...otherwise, we're doing a wider search for a match
-  var expected = handler.method
-  if (!expected || _.isEmpty(expected)) return true
-  if (!Array.isArray(expected)) expected = [expected]
-  return !!~expected.indexOf(method)
+  // ...otherwise, we're dealing with a more generic route
+  if (!expected || _.isEmpty(expected)) return true   // if it went this far, this generic route test should suffice
+  if (!Array.isArray(expected)) expected = [expected] // otherwise, convert the expected methods to an array if necessary
+  return !!~expected.indexOf(method)                  // check for the sent method in the declaration of acceptable methods
 }
