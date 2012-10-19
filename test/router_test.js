@@ -145,6 +145,18 @@ describe('Router', function() {
       done()
     })
 
+    it('should set an empty string action to undefined', function(done) {
+      var handler = {controller:'controller', action:''}
+      router.register('/your/:id', handler)
+
+      var match = router.match({url:'/your/value', method:'GET'})
+      assert.equal(typeof match, 'object')
+      assert.equal(match.controller, controller)
+      assert.equal(match.action, undefined)
+      done()
+    })
+
+
     it('should match single HTTP method', function(done) {
       var handler = {controller:'controller', method:'GET'}
       router.register('/your/:id', handler)
