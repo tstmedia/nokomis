@@ -107,9 +107,9 @@ exports.setControllerPath = function(path) {
  */
 
 function testHTTPMethod(method, handler) {
-  // if handler has verbs but not this one, then return null
+  // if handler has verbs but not this one, then return false
   if (!handler.method && !handler[method]) {
-    var verbs = _.reject( _.keys(handler), function(verb){ return verb === 'controller' })
+    var verbs = _.keys(handler)
     if (_.intersection(VERBS, verbs).length) return false
   }
 
