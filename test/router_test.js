@@ -9,6 +9,28 @@
 // PUT    /photos/:id       update  update a specific photo
 // DELETE /photos/:id       destroy delete a specific photo
 
+/*
+
+  {
+    '/photos' : {
+      controller: 'controller',
+      GET:        'index',
+      POST:       'create'
+    },
+    '/photos/:id' : {
+      controller: 'controller',
+      GET:        'show',
+      PUT:        'update',
+      DELETE:     'destroy'
+    },
+    '/photos/:id/edit' : {
+      controller: 'controller',
+      GET:        'edit'
+    }
+  }
+
+*/
+
 var assert = require('assert')
 var sinon = require('sinon')
 var tf = require('./fixtures')
@@ -56,46 +78,30 @@ describe('Router', function() {
       done()
     })
 
-    it('should correctly register a route with object syntax and method only', function(done) {
-      var handler = {controller:'controller', method:'GET'}
+    it('should correctly register a route with object syntax and method array', function(done) {
+      var handler = {controller:'controller', method:['GET','POST']}
       router.register({ '/my/:route': handler })
       assert.equal(router.routes['/my/:route'], handler)
       done()
     })
 
-    it('should correctly register a route with object syntax, action key, and single method', function(done) {
-      var handler = {controller:'controller', index:'GET'}
+    it('should correctly register a route with object syntax and method key', function(done) {
+      var handler = {controller:'controller', GET:'index'}
       router.register({ '/my/:route': handler })
       assert.equal(router.routes['/my/:route'], handler)
       done()
     })
 
-    it('should correctly register a route with object syntax, action key, and method array', function(done) {
-      var handler = {controller:'controller', index:['GET','POST']}
+    it('should correctly register a route with object syntax and many method keys', function(done) {
+      var handler = {controller:'controller', GET:'index', POST:'create'}
       router.register({ '/my/:route': handler })
       assert.equal(router.routes['/my/:route'], handler)
       done()
     })
 
-    it('should correctly register a route with object syntax, many action keys, and method strings', function(done) {
-      var handler = {controller:'controller', index:'GET', create:'POST'}
-      router.register({ '/my/:route': handler })
-      assert.equal(router.routes['/my/:route'], handler)
-      done()
-    })
-
-    it('should fail to register a route with object syntax, action keys, and conflicting methods', function(done) {
-      var handler = {controller:'controller', index:['GET','POST'], create:'POST'}
-      router.register({ '/my/:route': handler })
-      assert.equal(router.routes['/my/:route'], handler)
-      assert.equal('passes', false) // <- forcing a failure until this throws a proper error
-      done()
-    })
-
-    // Actually, given the above syntax, then this should overwrite the declaration, then I don't have to waste my time munging things together
     it('should overwrite a route declared multiple times', function(done) {
-      var handler1 = {controller:'controller', index:'GET'}
-      var handler2 = {controller:'controller', create:'POST'}
+      var handler1 = {controller:'controller', GET:'index'}
+      var handler2 = {controller:'controller', POST:'index'}
       router.register('/my/:id', handler1)
       router.register('/my/:id', handler2)
       assert.equal(router.routes['/my/:id'], handler2)
@@ -172,9 +178,8 @@ describe('Router', function() {
       done()
     })
 
-
-    it('should match single HTTP method on action key', function(done) {
-      var handler = {controller:'controller', index:'GET'}
+    it('should match method key', function(done) {
+      var handler = {controller:'controller', GET:'index'}
       router.register('/your/:id', handler)
 
       var match = router.match({url:'/your/value', method:'GET'})
@@ -184,19 +189,8 @@ describe('Router', function() {
       done()
     })
 
-    it('should match HTTP method array on action key', function(done) {
-      var handler = {controller:'controller', index:'GET'}
-      router.register('/your/:id', handler)
-
-      var match = router.match({url:'/your/value', method:'GET'})
-      assert.equal(typeof match, 'object')
-      assert.equal(match.controller, controller)
-      assert.equal(match.action, 'index')
-      done()
-    })
-
-    it('should match HTTP method array on action key', function(done) {
-      var handler = {controller:'controller', index:'GET', create:'POST'}
+    it('should match multiple method keys', function(done) {
+      var handler = {controller:'controller', GET:'index', POST:'create'}
       router.register('/your/:id', handler)
 
       var match = router.match({url:'/your/value', method:'GET'})
