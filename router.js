@@ -10,6 +10,7 @@ var router = new (require('routes').Router)()
 var _ = require('underscore')
 var routes = exports.routes = {}
 var controllerPath = '../controllers/'
+var VERBS = ['HEAD','GET','POST','PUT','DELETE','TRACE','OPTIONS','CONNECT','PATCH']
 
 /**
  * Registers a series of routes and their
@@ -41,7 +42,7 @@ exports.register = function(rte, ctlr) {
       var handler = rts[route]
 
       // test for HTTP method
-      if (!testHTTPMethod(method, handler.method)) return null
+      if (!testHTTPMethod(method, handler)) return null
 
       var controller = require(controllerPath + handler.controller)
       this.route = route
@@ -105,7 +106,15 @@ exports.setControllerPath = function(path) {
  * @api public
  */
 
-function testHTTPMethod(method, expected) {
+function testHTTPMethod(method, handler) {
+  // if handler has verbs but not this one, then return null
+  if (!handler.method && !handler[method]) {
+    var verbs = _.reject( _.keys(handler), function(verb){ return verb === 'controller' })
+    if (_.intersection(VERBS, verbs).length) return false
+  }
+
+  // otherwise, we're doing a wider search for a match
+  var expected = handler.method
   if (!expected || _.isEmpty(expected)) return true
   if (!Array.isArray(expected)) expected = [expected]
   return !!~expected.indexOf(method)

@@ -206,14 +206,16 @@ describe('Router', function() {
     })
 
     it('should match the controller method defined last', function(done){
-      var handler1 = {controller:'controller', index:'GET'}
-      var handler2 = {controller:'controller', create:'POST'}
+      var handler1 = {controller:'controller', GET:'index'}
+      var handler2 = {controller:'controller', POST:'create'}
       router.register('/your/:id', handler1)
       router.register('/your/:id', handler2)
 
+      // this shouldn't match
       var match = router.match({url:'/your/value', method:'GET'})
       assert(!match)
 
+      // this should match
       match = router.match({url:'/your/value', method:'POST'})
       assert(match)
       assert.equal(typeof match, 'object')
