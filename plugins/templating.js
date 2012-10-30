@@ -16,6 +16,7 @@ module.exports = Plugin.extend({
     instance.tmpl = this.tmpl
   },
 
+  // this can be overridden in your subclassed template plugin or an individual controller
   serialize: function() {
     return this.model
   },
