@@ -16,9 +16,13 @@ module.exports = Plugin.extend({
     instance.tmpl = this.tmpl
   },
 
+  serialize: function() {
+    return this.model
+  },
+
   render: function(callback) {
     var tmpl = this.template
-    var data = this.model
+    var data = this.serialize()
     var options = this.templateOptions || {}
     this.tmpl.render(tmpl, data, options, callback)
   }
