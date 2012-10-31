@@ -75,7 +75,7 @@ exports.match = function(req) {
   var url = Url.parse(req.url, true)
   var normalPathname = path.normalize(url.pathname)
   var match = router.match(normalPathname)
-  match && (match.query = url.query)
+  match && (match.query = url.query || {})
   return match && match.fn && match.fn(req.method) || null
 }
 
