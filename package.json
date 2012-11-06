@@ -4,13 +4,13 @@
   "description" : "A less opinionated web framework for node",
   "main" : "./index.js",
   "dependencies" : {
-    "async" : "*",
-    "bunyan": "*",
-    "cluster-master" : ">=0.0.10",
-    "extendable" : ">=0.0.3",
-    "glob": "3",
-    "routes" : "*",
-    "underscore" : "*"
+    "async" : "~0.1.x",
+    "bunyan": "~0.14.x",
+    "cluster-master" : "~0.0.x",
+    "extendable" : "~0.0.x",
+    "glob": "~3.1.x",
+    "routes" : "~0.1.x",
+    "underscore" : "~1.4.x"
   },
   "devDependencies" : {
     "mocha" : "*",
