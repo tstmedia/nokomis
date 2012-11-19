@@ -68,6 +68,7 @@ _.extend(App.prototype, {
         route: route,
         config: this.config
       })
+      controller.on('transfer', this.transfer)
     }.bind(this)
 
     var env = this.config.NODE_ENV
@@ -94,6 +95,23 @@ _.extend(App.prototype, {
       }
     })
     domain.run(run)
+  },
+
+  // Transfers control to another controller.
+  // Triggered by the transfer event on oldController
+  transfer: function(oldController, name, action) {
+    var Controller = this.router.findController(name)
+    if (Controller) {
+      // The new controller should get all the same options as the
+      // original controller, with the exception of the routed action
+      oldController.route.action = action
+      var controller = new Controller({
+        req: oldController.req,
+        res: oldController.res,
+        route: oldController.route,
+        config: oldController.config
+      })
+    }
   }
 
 })
