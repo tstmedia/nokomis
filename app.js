@@ -1,6 +1,7 @@
 var http = require('http')
 var path = require('path')
 var Domain = require('domain')
+var EventEmitter = require('events').EventEmitter
 
 var _ = require('underscore')
 var extendable = require('extendable')
@@ -9,6 +10,9 @@ var master = require('./master')
 var router = require('./router')
 
 function App(config) {
+  // setup as an event emitter
+  EventEmitter.call(this)
+
   this.config = _.extend({}, this.config, config)
   this.router = router
 
@@ -18,7 +22,7 @@ function App(config) {
   this.initialize.apply(this, arguments)
 }
 
-_.extend(App.prototype, {
+_.extend(App.prototype, EventEmitter.prototype, {
 
   initialize: function() {},
   setupRoutes: function() {},
@@ -68,7 +72,7 @@ _.extend(App.prototype, {
         route: route,
         config: this.config
       })
-      controller.on('transfer', this.transfer)
+      controller.once('transfer', this.transfer.bind(this))
     }.bind(this)
 
     var env = this.config.NODE_ENV

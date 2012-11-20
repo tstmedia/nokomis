@@ -149,7 +149,7 @@ _.extend(Controller.prototype, EventEmitter.prototype, {
   },
 
   // Transfers this request over to another controller
-  transfer: function(controller, action) {
+  transfer: function(controller, action, data) {
     // make sure the page can no longer render from this controller
     this._render = function(){}
 
@@ -159,7 +159,7 @@ _.extend(Controller.prototype, EventEmitter.prototype, {
     setTimeout(function(){
       // the app will be listening for a transfer event and
       // will create a new controller based on the current one
-      this.emit('transfer', this, controller, action)
+      self.emit('transfer', self, controller, action, data)
     }, 1)
   }
 
