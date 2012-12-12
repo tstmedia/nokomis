@@ -128,11 +128,20 @@ describe('Plugin', function() {
   })
 
   describe('stacking', function() {
-    var inst, TestClass, SubClassOne, SubClassTwo, PluginOne, PluginTwo
+    var inst, TestClass, SubClassOne, SubClassTwo,
+        PluginZero, PluginOne, PluginTwo
 
     beforeEach(function(done){
+      PluginZero = createPlugin()
+      PluginZero.prototype.zero = sinon.spy()
+      PluginOne = createPlugin()
+      PluginOne.prototype.one = sinon.spy()
+      PluginTwo = createPlugin()
+      PluginTwo.prototype.two = sinon.spy()
+
       TestClass = createTestClass()
       Plugin.makePluggable(TestClass)
+      TestClass.addPlugin(PluginZero)
 
       SubClassOne = TestClass.extend({})
       SubClassTwo = TestClass.extend({})
@@ -148,12 +157,10 @@ describe('Plugin', function() {
       done()
     })
 
-    it('should not add plugins to sibling sub classes', function(done) {
+    it('should add plugins to sub classes', function(done) {
       inst = new SubClassOne()
-      assert(PluginOne.prototype.initialize.calledOnce)
-      assert(!PluginTwo.prototype.initialize.called)
-      assert(inst.one)
-      assert(!inst.two)
+      assert(PluginZero.prototype.initialize.calledOnce)
+      assert(inst.zero)
       done()
     })
 
@@ -162,6 +169,15 @@ describe('Plugin', function() {
       assert(!PluginOne.prototype.initialize.called)
       assert(!PluginTwo.prototype.initialize.called)
       assert(!inst.one)
+      assert(!inst.two)
+      done()
+    })
+
+    it('should not add plugins to sibling sub classes', function(done) {
+      inst = new SubClassOne()
+      assert(PluginOne.prototype.initialize.calledOnce)
+      assert(!PluginTwo.prototype.initialize.called)
+      assert(inst.one)
       assert(!inst.two)
       done()
     })
