@@ -1,10 +1,13 @@
 
 var assert = require('assert')
 var sinon = require('sinon')
+var extendable = require('extendable')
 var Plugin = require('../plugin')
 
 function createTestClass() {
-  return function(){}
+  var TC = function(){}
+  TC.extend = extendable
+  return TC
 }
 
 function createPlugin() {
@@ -12,6 +15,7 @@ function createPlugin() {
     initialize: sinon.spy(),
     run: sinon.spy(Plugin.prototype.run),
     method: sinon.spy(),
+    ignored: 'ignored property',
     _ignored: sinon.spy()
   })
 }
@@ -94,6 +98,7 @@ describe('Plugin', function() {
     it('should add plugin methods to the pluggable class instance', function(done) {
       inst.runPlugins(function(){
         assert(inst.method)
+        assert.strictEqual(inst.method, plugin.prototype.method)
         done()
       })
     })
@@ -111,6 +116,54 @@ describe('Plugin', function() {
         assert(!inst._ignored)
         done()
       })
+    })
+
+    it('should not add plugin non-function properties', function(done) {
+      inst.runPlugins(function(){
+        assert(!inst.ignored)
+        done()
+      })
+    })
+
+  })
+
+  describe('stacking', function() {
+    var inst, TestClass, SubClassOne, SubClassTwo, PluginOne, PluginTwo
+
+    beforeEach(function(done){
+      TestClass = createTestClass()
+      Plugin.makePluggable(TestClass)
+
+      SubClassOne = TestClass.extend({})
+      SubClassTwo = TestClass.extend({})
+
+      PluginOne = createPlugin()
+      PluginOne.prototype.one = sinon.spy()
+      PluginTwo = createPlugin()
+      PluginTwo.prototype.two = sinon.spy()
+
+      SubClassOne.addPlugin(PluginOne)
+      SubClassTwo.addPlugin(PluginTwo)
+
+      done()
+    })
+
+    it('should not add plugins to sibling sub classes', function(done) {
+      inst = new SubClassOne()
+      assert(PluginOne.prototype.initialize.calledOnce)
+      assert(!PluginTwo.prototype.initialize.called)
+      assert(inst.one)
+      assert(!inst.two)
+      done()
+    })
+
+    it('should not add plugins to parent class', function(done) {
+      inst = new TestClass()
+      assert(!PluginOne.prototype.initialize.called)
+      assert(!PluginTwo.prototype.initialize.called)
+      assert(!inst.one)
+      assert(!inst.two)
+      done()
     })
 
   })
