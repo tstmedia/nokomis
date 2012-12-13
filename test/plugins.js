@@ -148,10 +148,10 @@ describe('Plugin', function() {
 
       PluginOne = createPlugin()
       PluginOne.prototype.one = sinon.spy()
+      SubClassOne.addPlugin(PluginOne)
+
       PluginTwo = createPlugin()
       PluginTwo.prototype.two = sinon.spy()
-
-      SubClassOne.addPlugin(PluginOne)
       SubClassTwo.addPlugin(PluginTwo)
 
       done()
@@ -159,15 +159,12 @@ describe('Plugin', function() {
 
     it('should add plugins to sub classes', function(done) {
       inst = new SubClassOne()
-      assert(PluginZero.prototype.initialize.calledOnce)
       assert(inst.zero)
       done()
     })
 
     it('should not add plugins to parent class', function(done) {
       inst = new TestClass()
-      assert(!PluginOne.prototype.initialize.called)
-      assert(!PluginTwo.prototype.initialize.called)
       assert(!inst.one)
       assert(!inst.two)
       done()
@@ -175,8 +172,6 @@ describe('Plugin', function() {
 
     it('should not add plugins to sibling sub classes', function(done) {
       inst = new SubClassOne()
-      assert(PluginOne.prototype.initialize.calledOnce)
-      assert(!PluginTwo.prototype.initialize.called)
       assert(inst.one)
       assert(!inst.two)
       done()
