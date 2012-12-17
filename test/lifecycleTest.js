@@ -12,6 +12,9 @@ function createTestClass() {
   TC.prototype.before = lifecycle.createRegFunction('before')
   TC.prototype.runBefore = lifecycle.createRunFunction('before')
   TC.prototype.method = sinon.spy()
+  TC.prototype.asyncMethod = sinon.spy(function(cb) {
+    process.nextTick(cb)
+  })
   return TC
 }
 
@@ -78,6 +81,34 @@ describe('Lifecycle', function() {
       assert.strictEqual(tc._before.length, 1)
       assert.strictEqual(tc._before[0].method, tc.method)
       done()
+    })
+
+  })
+
+  describe('Running', function() {
+
+    beforeEach(function(done) {
+      TestClass = createTestClass()
+      done()
+    })
+
+    it('should run a callback without any added methods', function(done) {
+      var tc = new TestClass()
+      tc.route.action = 'action'
+      tc.runBefore(function(err) {
+        assert(true)
+        done()
+      })
+    })
+
+    it('should be asynchronous', function(done) {
+      var tc = new TestClass()
+      tc.route.action = 'action'
+      tc.before('asyncMethod', {})
+      tc.runBefore(function(err) {
+        assert(tc.asyncMethod.calledOnce)
+        done()
+      })
     })
 
   })
