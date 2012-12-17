@@ -53,6 +53,8 @@ function Controller(options) {
     console.log('Running controller\'s initialize function')
     this.initialize.apply(this, args)
 
+    this.emit('before')
+
     // Call the `action` if one was matched in the route
     if (options.route.action) {
       console.log('Calling the controller\'s ' + options.route.action + ' action')
@@ -99,6 +101,36 @@ _.extend(Controller.prototype, EventEmitter.prototype, {
     }
 
     this.error(415, 'Media type not supported')
+  },
+
+  before: function(method, filter) {
+    var self = this
+    var items = []
+    switch (typeof method) {
+      case 'string':
+        method = this[method]
+      case 'function':
+        items.push({ method: method, filter: filter })
+        break
+      case 'object':
+        Object.keys(method).forEach(function(key) {
+          items.push({method: self[key], filter:method[key]
+        })
+    }
+
+    this._before = [].concat(items, this._before || [])
+  },
+
+  runBefore: function() {
+
+  },
+
+  after: function() {
+
+  },
+
+  runAfter: function() {
+
   },
 
   // Determines the media type to respond with. Override
