@@ -8,7 +8,8 @@ module.exports = Controller
 var EventEmitter = require('events').EventEmitter
 var _ = require('underscore')
 var extendable = require('extendable')
-var Plugin = require('./plugin')
+var lifecycle = require('./lifecycle')
+var Plugin = require('../plugin')
 
 function Controller(options) {
   this.res = options.res
@@ -53,14 +54,15 @@ function Controller(options) {
     console.log('Running controller\'s initialize function')
     this.initialize.apply(this, args)
 
-    this.emit('before')
-
-    // Call the `action` if one was matched in the route
-    if (options.route.action) {
-      console.log('Calling the controller\'s ' + options.route.action + ' action')
-      var action = this[options.route.action]
-      if (action) action.call(this, this._done)
-    }
+    this.runBefore(function(err) {
+      if (err) return this.error(err)
+      // Call the `action` if one was matched in the route
+      if (options.route.action) {
+        console.log('Calling the controller\'s ' + options.route.action + ' action')
+        var action = this[options.route.action]
+        if (action) action.call(this, this._done)
+      }
+    }.bind(this))
   }
 }
 
@@ -69,7 +71,10 @@ _.extend(Controller.prototype, EventEmitter.prototype, {
   // Called when the action method is done populating the
   // this.model object with data.
   _done: function() {
-    this._render()
+    this.runAfter(function(err) {
+      if (err) return this.error(err)
+      this._render()
+    }.bind(this))
   },
 
   // Determines the best response type based on what the
@@ -103,35 +108,10 @@ _.extend(Controller.prototype, EventEmitter.prototype, {
     this.error(415, 'Media type not supported')
   },
 
-  before: function(method, filter) {
-    var self = this
-    var items = []
-    switch (typeof method) {
-      case 'string':
-        method = this[method]
-      case 'function':
-        items.push({ method: method, filter: filter })
-        break
-      case 'object':
-        Object.keys(method).forEach(function(key) {
-          items.push({method: self[key], filter:method[key]
-        })
-    }
-
-    this._before = [].concat(items, this._before || [])
-  },
-
-  runBefore: function() {
-
-  },
-
-  after: function() {
-
-  },
-
-  runAfter: function() {
-
-  },
+  before: lifecycle.createRegFunction('before'),
+  runBefore: lifecycle.createRunFunction('before'),
+  after: lifecycle.createRegFunction('after'),
+  runAfter: lifecycle.createRunFunction('after'),
 
   // Determines the media type to respond with. Override
   // with your own content negotiation code.
