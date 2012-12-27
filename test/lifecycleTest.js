@@ -10,7 +10,7 @@ function createTestClass() {
     return this.format || 'text/html'
   })
   TC.prototype.before = lifecycle.createRegFunction('before')
-  TC.prototype.runBefore = lifecycle.createRunFunction('before')
+  TC.prototype.runBefore = lifecycle.createExecFunction('before')
   TC.prototype.method = sinon.spy()
   TC.prototype.asyncMethod = sinon.spy(function(cb) {
     process.nextTick(cb)
@@ -37,15 +37,15 @@ describe('Lifecycle', function() {
 
   })
 
-  describe('createRunFunction', function() {
+  describe('createExecFunction', function() {
 
     it('should exist', function(done) {
-      assert(lifecycle.createRunFunction)
+      assert(lifecycle.createExecFunction)
       done()
     })
 
     it('should return a function', function(done) {
-      var result = lifecycle.createRunFunction()
+      var result = lifecycle.createExecFunction()
       assert.equal(typeof result, 'function')
       done()
     })

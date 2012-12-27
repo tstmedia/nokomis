@@ -26,7 +26,7 @@ var createRegFunction = module.exports.createRegFunction = function(name) {
   }
 }
 
-var createRunFunction = module.exports.createRunFunction = function(name) {
+var createExecFunction = module.exports.createExecFunction = function(name) {
   return function(callback) {
     var items = this['_'+name]
     if (!Array.isArray(items)) return callback()
@@ -54,16 +54,16 @@ function runItem(item, callback) {
     var format = this.mediaType()
     var action = this.route.action
     // filter out non matching media type formats
-    if (filter.format && !getRegexp(filter.format).test(format)) return
+    if (filter.format && !getRegexp(filter.format).test(format)) return callback()
     // filter out excepted actions
     if (filter.except && action) {
-      if (Array.isArray(filter.except) && ~filter.except.indexOf(action)) return
-      if (filter.except == action) return
+      if (Array.isArray(filter.except) && ~filter.except.indexOf(action)) return callback()
+      if (filter.except == action) return callback()
     }
     // filter out actions not in `only`
     if (filter.only && action) {
-      if (Array.isArray(filter.only) && !~filter.only.indexOf(action)) return
-      if (filter.only != action) return
+      if (Array.isArray(filter.only) && !~filter.only.indexOf(action)) return callback()
+      if (!Array.isArray(filter.only) && filter.only != action) return callback()
     }
   }
   item.method.call(this, callback)
