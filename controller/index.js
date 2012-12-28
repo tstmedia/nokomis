@@ -94,20 +94,20 @@ _.extend(Controller.prototype, EventEmitter.prototype, {
       return this.render(function(err, html){
         if (err) self.error(err)
         if (self.html) return self.html(html)
-        throw 'No `html` method implemented'
+        throw new Error('No `html` method implemented')
       })
     }
 
     if (/json$/.test(preferredType)) {
       console.log('Rendering JSON')
       if (this.json) return this.json(this.model)
-      throw 'No `json` method implemented'
+      throw new Error('No `json` method implemented')
     }
 
     if (/xml$/.test(preferredType)) {
       console.log('Rendering XML')
       if (this.xml) return this.xml(this.model)
-      throw 'No `xml` method implemented'
+      throw new Error('No `xml` method implemented')
     }
 
     this.error(415, 'Media type not supported')
