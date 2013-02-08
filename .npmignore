@@ -1,4 +1,5 @@
 node_modules
 testapp
 test
-app
+.travis.yml
+.gitignore
